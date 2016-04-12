@@ -1,0 +1,61 @@
+1)
+
+Add code to the deleteTicket method; so if user enters a ticket ID that doesn’t exist,
+it prints an error message and asks the user to try again.
+You should also validate that the user is not entering a String or double or something that is not an int.
+ gain; the method should ask the user to enter the ticket ID again.)
+
+ COMPLETED
+
+
+2)
+
+Modify the menu. Remove the Delete Ticket option. Replace it with 3 new options:
+Delete by ID, Delete by Issue, and Search by Name.
+
+Write ONE method, which searches your ticket list and returns a new list of Tickets
+whose descriptions contain a certain string.
+For example, you might want to search for all tickets with the word “server” in.
+Your method should return a list of all Tickets with “server” in the description.
+
+Use this method to help you implement Search by Name.
+
+
+3)
+
+Now, implement Delete by Issue.
+Your user may want to search for all tickets with "Server" in the description,
+to see a list of those tickets and their IDs.
+At that point, they could enter an ID of the Ticket they want to delete.
+
+
+4)
+
+Modify your program so that Tickets can store another date – resolution date – and a String that documents why the ticket was closed – the fix or the resolution for the ticket.
+Now assume that when users delete a ticket, it has been resolved in some way. Either you’ve fixed the problem, or the user has figured out how to change their own screensaver, or it’s become a non-issue in some other way
+Now, when you delete a Ticket, your program should ask the user for the resolution. It should store the resolution, plus the current date. Now, remove this Ticket from the ticketQueue list.
+And, add this ticket to a new list, called resolvedTickets.
+There are at least two ways of doing this:
+Question: Would you rather subclass Ticket and create a new class called ResolvedTicket? Or modify the current Ticket class to add these two new variables? Why did you choose the approach that you used?
+
+5)
+
+When the program closes, please write out all the data about all open tickets, and all resolved tickets, to files.
+Resolved tickets should go into one file.  This file should have today’s date in the filename. Something like “Resolved_tickets_as_of_february_14_2014.txt” perhaps?
+Open tickets should go in another file called “open_tickets.txt”.
+
+    Currently have the a file that contains every open ticket being written each time the user quits the program.
+    Need to see if it's overwritten or not when the program is opened again.
+    As well as adding a separate file for resolved tickets, after some of the tasks above are completed. 
+
+6)
+
+When you program opens, it should look for a file called open_tickets.txt.
+Read in this file, and create ticket objects,
+and store these in the ticketQueue list so the user can see all open tickets.
+
+7)
+
+What happens to ticket IDs when the program is closed and opened? Make sure they don't reset to 1 when the user restarts the program.
+Push this Java code to your GitHub repository and paste the link here
+Also paste your Java code here
