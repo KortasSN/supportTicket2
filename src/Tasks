@@ -11,14 +11,17 @@ You should also validate that the user is not entering a String or double or som
 2)
 
 Modify the menu. Remove the Delete Ticket option. Replace it with 3 new options:
-Delete by ID, Delete by Issue, and Search by Name.
-
+Delete by ID, (2)
+Delete by Issue, (3)
+and Search by Name. (4)
 Write ONE method, which searches your ticket list and returns a new list of Tickets
 whose descriptions contain a certain string.
 For example, you might want to search for all tickets with the word “server” in.
 Your method should return a list of all Tickets with “server” in the description.
 
 Use this method to help you implement Search by Name.
+
+    COMPLETED
 
 
 3)
@@ -28,6 +31,7 @@ Your user may want to search for all tickets with "Server" in the description,
 to see a list of those tickets and their IDs.
 At that point, they could enter an ID of the Ticket they want to delete.
 
+    COMPLETED
 
 4)
 

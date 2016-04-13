@@ -1,11 +1,13 @@
 package com.jacobboline;
 
+import java.io.Serializable;
+
 import java.util.Date;
 
 /**
  * Created by g1zmo on 4/8/2016.
  */
-public class Ticket {
+public class Ticket implements Serializable {
 
     private int priority;
     private String reporter; //Stores person or department who reported issue
@@ -25,6 +27,14 @@ public class Ticket {
         this.dateReported = date;
         this.ticketID = staticTicketIDCounter;
         staticTicketIDCounter++;
+    }
+
+    protected String getDescription() {
+        return description;
+    }
+
+    protected String getReporter() {
+        return reporter;
     }
 
     protected int getPriority(){
