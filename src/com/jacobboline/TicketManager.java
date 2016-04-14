@@ -14,6 +14,7 @@ public class TicketManager {
 
 
         LinkedList<Ticket> ticketQueue = new LinkedList<>();
+        ArrayList<Ticket> resolvedTicketList = new ArrayList<>();
 
         Scanner scan = new Scanner(System.in);
 
@@ -42,18 +43,9 @@ public class TicketManager {
             if (task == 2 || task == 3 || task == 4) {
                 System.out.println("Task 2, 3, or 4");
                 //deleteTicket(ticketQueue);
-                findTicket(task, ticketQueue);
+                findTicket(task, ticketQueue, resolvedTicketList);
             }
-            /*if (task == 3) {
-                System.out.println("Task 3");
-                //deleteTicket(ticketQueue);
-                findTicket(task, ticketQueue);
-            }
-            if (task == 4) {
-                System.out.println("Task 4");
-                //deleteTicket(ticketQueue);
-                findTicket(task, ticketQueue);
-            }*/
+
             if (task == 5) {
                 System.out.println("Task 5");
                 if (ticketQueue.isEmpty()) System.out.println("Ticket queue is empty.");
@@ -61,7 +53,7 @@ public class TicketManager {
             }
             if (task == 6) {
                 System.out.println("Task 6");
-                writeTaskFile(ticketQueue);
+                writeTaskFiles(ticketQueue, resolvedTicketList);
                 //Quit. Future prototype may want to save all tickets to a file
                 System.out.println("Quitting program");
                 break;
@@ -73,7 +65,7 @@ public class TicketManager {
 
     }
 
-    private static void findTicket(int task, LinkedList<Ticket> ticketLinkedList) {
+    private static void findTicket(int task, LinkedList<Ticket> ticketLinkedList, ArrayList<Ticket> resolvedTicketList) {
 
         switch (task) {
 
@@ -90,6 +82,7 @@ public class TicketManager {
 
                 for (Ticket ticket : ticketLinkedList) {
                     if (ticket.ticketID == ticketID) {
+                        ticket.addToResolutionList(resolvedTicketList);
                         ticketLinkedList.remove(ticket);
                         System.out.println(
                                 "The ticket with a ticketID of " +
@@ -118,8 +111,8 @@ public class TicketManager {
                 Pattern pattern = Pattern.compile(descriptionPhrase);
 
                 for (Ticket ticket : ticketLinkedList) {
-                    Matcher matcher = pattern.matcher(ticket.getDescription());
-                    boolean matches = matcher.matches();
+                    /*Matcher matcher = pattern.matcher(ticket.getDescription());
+                    boolean matches = matcher.matches();*/
 
                     //if (matches)
                     if (ticket.getDescription().contains(descriptionPhrase)) {
@@ -133,19 +126,17 @@ public class TicketManager {
 
                 if (matchingTicketIDs.size() > 0) {
 
+                    int validSelection = deleteTicketDecision(matchingTicketIDs, ticketLinkedList, resolvedTicketList);
 
-                    int validSelection = deleteTicketDecision(matchingTicketIDs, ticketLinkedList);
+                    while (validSelection == 1)
+                        deleteTicketDecision(matchingTicketIDs, ticketLinkedList, resolvedTicketList);
 
-                    while (validSelection == 1) {
-                        deleteTicketDecision(matchingTicketIDs, ticketLinkedList);
-                    }
                 } else System.out.println("No matches were found.");
 
                 break;
             }
 
-            case (4):
-            {
+            case (4): {
 
                 Scanner nameScanner = new Scanner(System.in);
                 System.out.println("Enter the reporter's name you wish to find any tickets with a matching reporter.");
@@ -161,61 +152,35 @@ public class TicketManager {
                 //matchingTicketNames.add(ticket.getReporter());
 
                 ticketLinkedList.stream().filter(
-                     ticket -> ticket.getReporter().contains(namePhrase)).forEach
-                    (ticket ->
-                    {
-                        //matchingTicketNames.add(ticket.getReporter());
-                        matchingNameTicketIDs.add(ticket.ticketID);
-                        System.out.println(
-                            "Ticket Reporter Match:\n" +
-                            "Description: " + ticket.getDescription() + "\n" +
-                            "Name: " + ticket.getReporter() + "\n" +
-                            "TicketID: " + ticket.ticketID);
-                    });
+                        ticket -> ticket.getReporter().contains(namePhrase)).forEach
+                        (ticket ->
+                        {
+                            //matchingTicketNames.add(ticket.getReporter());
+                            matchingNameTicketIDs.add(ticket.ticketID);
+                            System.out.println(
+                                    "Ticket Reporter Match:\n" +
+                                            "Description: " + ticket.getDescription() + "\n" +
+                                            "Name: " + ticket.getReporter() + "\n" +
+                                            "TicketID: " + ticket.ticketID);
+                        });
 
-                if (matchingNameTicketIDs.size() >= 1)
-                {
-                    int validSelection = deleteTicketDecision(matchingNameTicketIDs, ticketLinkedList);
-                    while (validSelection == 1) deleteTicketDecision(matchingNameTicketIDs, ticketLinkedList);
-                }
-
-                else System.out.println("No matches were found.");
+                if (matchingNameTicketIDs.size() >= 1) {
+                    int validSelection = deleteTicketDecision(matchingNameTicketIDs, ticketLinkedList, resolvedTicketList);
+                    while (validSelection == 1)
+                        deleteTicketDecision(matchingNameTicketIDs, ticketLinkedList, resolvedTicketList);
+                } else System.out.println("No matches were found.");
 
                 break;
             }
 
-                    /*Scanner delNameTicketScanner = new Scanner(System.in);
-
-                    System.out.println("Would you like to delete one of the matching tickets? (Y or N");
-                    String nameDeletionChoice = delNameTicketScanner.next();
-
-                    while (!nameDeletionChoice.equalsIgnoreCase("y") || !nameDeletionChoice.equalsIgnoreCase("n")) {
-                        System.out.println("Please enter Y or N to continue");
-                        delNameTicketScanner.hasNext();
-                    }
-
-                    if (nameDeletionChoice.equalsIgnoreCase("Y")) {
-                        System.out.println("Enter the ticketID of the ticket to delete.");
-                        int nameTicketIDtoDelete = delNameTicketScanner.nextInt();
-
-                        if (matchingNameTicketIDs.contains(nameTicketIDtoDelete)) {
-                            System.out.println("Ticket removed from ticket queue.");
-                            ticketLinkedList.stream().filter
-                                    (ticket2 -> ticket2.ticketID == nameTicketIDtoDelete).forEach(ticketLinkedList::remove);
-
-                        }
-                    } else System.out.println("Returning to main menu.");
-                } else System.out.println("No matches were found.");
-*/
-            }
-
         }
 
+    }
 
 
-    private static void writeTaskFile(LinkedList<Ticket> ticketQueue) {
+    private static void writeTaskFiles(LinkedList<Ticket> ticketQueue, ArrayList<Ticket> resolvedTicketList) {
 
-        File unresolvedTickets = new File("unresolvedTickets.txt");
+        //File unresolvedTickets = new File("unresolvedTickets.txt");
 
         try {
             for (Ticket ticket : ticketQueue) {
@@ -225,10 +190,18 @@ public class TicketManager {
             System.out.println("Problem finding unresolved tickets text file: " + iOE.getMessage());
         }
 
+        try {
+            for (Ticket resolvedTicket : resolvedTicketList) {
+                serialize(resolvedTicketList, "resolvedTickets.txt");
+            }
+        } catch (IOException iOE) {
+            System.out.println("Problem finding resolved tickets text file: " + iOE.getMessage());
+        }
+
 
     }
 
-    protected static void deleteTicket(LinkedList<Ticket> ticketQueue) {
+    protected static void deleteTicket(LinkedList<Ticket> ticketQueue, ArrayList<Ticket> resolvedTicketList) {
 
         if (ticketQueue.isEmpty()) System.out.println("Ticket Queue is empty, no tickets to delete.");
 
@@ -261,11 +234,12 @@ public class TicketManager {
 
             if (ticketToRemove == null) System.out.println("No Matching TicketID was found");
             else System.out.println(ticketToRemove.ticketID + " has been removed.");
+            ticketToRemove.addToResolutionList(resolvedTicketList);
             ticketQueue.remove(ticketToRemove);
         }
     }
 
-    //Move the adding ticket code to a method
+
     protected static void addTickets(LinkedList<Ticket> ticketQueue) {
         System.out.println("Reached addTickets.");
         Scanner sc = new Scanner(System.in);
@@ -351,11 +325,14 @@ public class TicketManager {
 
     protected static void serialize(Object obj, String fileName) //get rid of throw
             throws IOException {
-        FileOutputStream fos = new FileOutputStream(fileName);
+
+
+        FileOutputStream fos = new FileOutputStream(fileName, true);
         BufferedOutputStream bos = new BufferedOutputStream(fos);
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(obj);
         oos.close();
+
 
     }
 
@@ -370,7 +347,12 @@ public class TicketManager {
 
     }
 
-    public static int deleteTicketDecision(ArrayList<Integer> matchingTicketIDs, LinkedList<Ticket> ticketLinkedList) {
+    public static int deleteTicketDecision(
+
+            ArrayList<Integer> matchingTicketIDs,
+            LinkedList<Ticket> ticketLinkedList,
+            ArrayList<Ticket> resolvedTicketList)
+    {
         Scanner delTicket = new Scanner(System.in);
         System.out.println("Would you like to delete one of the matching tickets? (Y or N");
         String userChoice = delTicket.next();
@@ -381,9 +363,15 @@ public class TicketManager {
             int ticketIDtoDelete = delTicket.nextInt();
 
             if (matchingTicketIDs.contains(ticketIDtoDelete)) {
+
+                ticketLinkedList.stream().filter
+                        (ticket3 -> matchingTicketIDs.contains(ticketIDtoDelete)).forEach
+                        (ticket3 -> ticket3.addToResolutionList(resolvedTicketList));
+
                 System.out.println("Ticket removed from ticket queue.");
                 ticketLinkedList.stream().filter
-                        (ticket2 -> ticket2.ticketID == ticketIDtoDelete).forEach(ticketLinkedList::remove);
+                        ((Ticket ticket2) -> ticket2.ticketID == ticketIDtoDelete).forEach(ticketLinkedList::remove);
+
 
             }
             return 0;
@@ -392,9 +380,30 @@ public class TicketManager {
         if (userChoice.equalsIgnoreCase("N")) {
             System.out.println("Returning to main menu.");
             return 0;
-        }
-        else return 1;
+        } else return 1;
 
     }
+
+
+    public static void compareOpenAndClosedTickets() {
+       /* try {*/
+
+            /*BufferedReader bRopen = new BufferedReader(new FileReader("unresolvedTickets.txt"));
+            BufferedReader bRclosed = new BufferedReader(new FileReader("resolvedTickets.txt"));
+            bRopen.*/
+
+            //TODO use the deserialize function to create lists from both text files +
+            //TODO if any ticket from the resolved list is found in the unresolved list,
+            //TODO remove that ticket from the unresolved text file
+
+
+
+       /* } catch (IOException iOE) {
+            System.out.println(iOE.getMessage());
+        } */
+    }
+
+
+
 }
 

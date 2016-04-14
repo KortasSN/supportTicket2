@@ -2,12 +2,12 @@ package com.jacobboline;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
-/**
- * Created by g1zmo on 4/8/2016.
- */
 public class Ticket implements Serializable {
+
 
     private int priority;
     private String reporter; //Stores person or department who reported issue
@@ -15,6 +15,8 @@ public class Ticket implements Serializable {
     private Date dateReported;
     private static int staticTicketIDCounter = 1;
     protected int ticketID;
+    private Date dateResolved;
+    private String resolutionDescription;
 
     //We can auto-generate get and set methods if and when we need
 
@@ -33,6 +35,22 @@ public class Ticket implements Serializable {
         return description;
     }
 
+    protected void setDateResolved(Date newDate) {
+        this.dateResolved = newDate;
+    }
+
+    protected Date getDateResolved() {
+        return this.dateResolved;
+    }
+
+    protected void setResolutionDescription(String resolutionDescription) {
+        this.resolutionDescription = resolutionDescription;
+    }
+
+    protected String getResolutionDescription() {
+        return this.resolutionDescription;
+    }
+
     protected String getReporter() {
         return reporter;
     }
@@ -49,6 +67,23 @@ public class Ticket implements Serializable {
     public String toString(){
         return("Ticket ID: " + this.ticketID + " Description : " + this.description + " Priority: " + this.priority + " Reported by: "
                 + this.reporter + " Reported on: " + this.dateReported);
+    }
+
+    public void addToResolutionList(ArrayList<Ticket> resolvedTicketList) {
+
+        Scanner resolvedScanner = new Scanner(System.in);
+        System.out.println("Enter a description of why the ticket is being resolved");
+        String resolution = resolvedScanner.next();
+        while (resolution.isEmpty()) {
+            System.out.println("An empty description is not a description.");
+            resolvedScanner.hasNext();
+
+        this.setResolutionDescription(resolution);
+        //Date newDate = new Date();
+        this.dateResolved = new Date();
+        }
+
+
     }
 
 
